@@ -3,6 +3,13 @@ import requests
 from datetime import date, datetime
 from dotenv import load_dotenv
 from models import JobPosting, Session
+import logging
+
+logging.basicConfig(
+    filename="pipeline.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 load_dotenv()
 
@@ -21,14 +28,17 @@ def fetch_jobs(query="software engineer", pages=1):
             "results_per_page": 20,
             "what": query
         }
-        response = requests.get(url, params=params)
 
-        if response.status_code != 200:
-            print(f"Error on page {page}: {response.status_code}")
+        try:
+            response = requests.get(url, params=params, timeout=10)
+            response.raise_for_status()  # raises an error for 4xx/5xx responses
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Failed to fetch page {page} for '{query}': {e}")
+            print(f"Error fetching page {page} for '{query}' — skipping. See pipeline.log for details.")
             break
 
         data = response.json()
-        all_jobs.extend(data["results"])
+        all_jobs.extend(data.get("results", []))
 
     return all_jobs
 
@@ -66,10 +76,15 @@ def save_jobs(jobs):
 if __name__ == "__main__":
     from config import SEARCH_QUERIES, PAGES_PER_QUERY
 
-    total_new = 0
-
     for query in SEARCH_QUERIES:
         print(f"\nSearching for: {query}")
-        jobs = fetch_jobs(query=query, pages=PAGES_PER_QUERY)
-        print(f"Fetched {len(jobs)} jobs from API")
-        save_jobs(jobs)
+        logging.info(f"Starting search for '{query}'")
+
+        try:
+            jobs = fetch_jobs(query=query, pages=PAGES_PER_QUERY)
+            print(f"Fetched {len(jobs)} jobs from API")
+            save_jobs(jobs)
+        except Exception as e:
+            logging.error(f"Unexpected error processing '{query}': {e}")
+            print(f"Something went wrong with '{query}' — skipping. See pipeline.log for details.")
+            continue
