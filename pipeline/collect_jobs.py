@@ -64,6 +64,12 @@ def save_jobs(jobs):
 
 
 if __name__ == "__main__":
-    jobs = fetch_jobs(query="software engineer", pages=2)
-    print(f"Fetched {len(jobs)} jobs from API")
-    save_jobs(jobs)
+    from config import SEARCH_QUERIES, PAGES_PER_QUERY
+
+    total_new = 0
+
+    for query in SEARCH_QUERIES:
+        print(f"\nSearching for: {query}")
+        jobs = fetch_jobs(query=query, pages=PAGES_PER_QUERY)
+        print(f"Fetched {len(jobs)} jobs from API")
+        save_jobs(jobs)
