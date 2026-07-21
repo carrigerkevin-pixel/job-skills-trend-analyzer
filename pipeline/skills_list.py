@@ -1,0 +1,33 @@
+# Maps a "display name" for each skill to a list of ways it might appear in text.
+# The matching will be case-insensitive, so we don't need to worry about capitalization here.
+
+SKILLS = {
+    "Python": ["python"],
+    "Java": ["java"],
+    "JavaScript": ["javascript", "js"],
+    "SQL": ["sql"],
+    "AWS": ["aws", "amazon web services"],
+    "Docker": ["docker"],
+    "Kubernetes": ["kubernetes", "k8s"],
+    "React": ["react", "react.js", "reactjs"],
+    "Git": ["git"],
+    "Machine Learning": ["machine learning", "ml"],
+    "SQL Server": ["sql server"],
+    "PostgreSQL": ["postgresql", "postgres"],
+    "MongoDB": ["mongodb", "mongo"],
+    "REST APIs": ["rest api", "restful api", "rest apis"],
+    "Node.js": ["node.js", "nodejs", "node"],
+    "C++": ["c++"],
+    "C#": ["c#"],
+    "TypeScript": ["typescript"],
+    "Azure": ["azure"],
+    "GCP": ["gcp", "google cloud"],
+    "Linux": ["linux"],
+    "CI/CD": ["ci/cd", "continuous integration"],
+    "Agile": ["agile", "scrum"],
+    "Excel": ["excel"],
+    "Tableau": ["tableau"],
+    "Spark": ["apache spark", "spark"],
+    "TensorFlow": ["tensorflow"],
+    "PyTorch": ["pytorch"],
+}
