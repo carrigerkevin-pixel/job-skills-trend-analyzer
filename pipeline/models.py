@@ -24,6 +24,14 @@ class JobPosting(Base):
     date_collected = Column(Date)
     url = Column(String)
 
+class ExtractedSkill(Base):
+    __tablename__ = "extracted_skills"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    job_id = Column(Integer, nullable=False)
+    skill_name = Column(String, nullable=False)
+    date_extracted = Column(Date)
+
 # This creates the actual database file and table if they don't exist yet
 def init_db():
     Base.metadata.create_all(engine)
