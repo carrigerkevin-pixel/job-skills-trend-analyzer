@@ -1,4 +1,5 @@
 from models import Session, JobPosting
+from models import SkillSnapshot
 
 session = Session()
 jobs = session.query(JobPosting).all()
@@ -44,3 +45,6 @@ for skill, count in results:
     sample_job = session.query(JobPosting).first()
 print("Description length:", len(sample_job.description))
 print(sample_job.description)
+
+snapshot_count = session.query(SkillSnapshot).count()
+print(f"Total snapshot rows: {snapshot_count}")

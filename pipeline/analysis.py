@@ -1,5 +1,7 @@
 from sqlalchemy import func
 from models import Session, ExtractedSkill, JobPosting
+from datetime import date
+from models import SkillSnapshot
 
 
 def top_skills_overall(limit=10):
@@ -43,6 +45,34 @@ def all_categories():
     session.close()
     return [r[0] for r in results if r[0] is not None]
 
+def save_snapshot():
+    """Save today's skill counts (overall and per-category) as a permanent snapshot."""
+    session = Session()
+    today = date.today()
+
+    # Save overall counts
+    for row in top_skills_overall(limit=1000):
+        session.add(SkillSnapshot(
+            skill_name=row["skill"],
+            category=None,
+            count=row["count"],
+            snapshot_date=today
+        ))
+
+    # Save per-category counts
+    for category in all_categories():
+        for row in top_skills_by_category(category, limit=1000):
+            session.add(SkillSnapshot(
+                skill_name=row["skill"],
+                category=category,
+                count=row["count"],
+                snapshot_date=today
+            ))
+
+    session.commit()
+    session.close()
+    print(f"Saved snapshot for {today}")
+
 
 if __name__ == "__main__":
     print("=== Top skills overall ===")
@@ -54,3 +84,6 @@ if __name__ == "__main__":
         print(f"\n-- {category} --")
         for row in top_skills_by_category(category, limit=5):
             print(f"{row['skill']}: {row['count']}")
+
+    print("\n=== Saving snapshot ===")
+    save_snapshot()

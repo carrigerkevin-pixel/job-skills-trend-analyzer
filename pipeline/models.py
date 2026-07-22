@@ -37,5 +37,14 @@ class ExtractedSkill(Base):
 def init_db():
     Base.metadata.create_all(engine)
 
+class SkillSnapshot(Base):
+    __tablename__ = "skill_snapshots"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    skill_name = Column(String, nullable=False)
+    category = Column(String)  # None/null means "overall", not tied to one category
+    count = Column(Integer, nullable=False)
+    snapshot_date = Column(Date, nullable=False)
+
 # This gives us a way to open a "session" to talk to the database
 Session = sessionmaker(bind=engine)
