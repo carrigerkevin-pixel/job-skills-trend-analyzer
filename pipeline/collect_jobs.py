@@ -43,7 +43,7 @@ def fetch_jobs(query="software engineer", pages=1):
     return all_jobs
 
 
-def save_jobs(jobs):
+def save_jobs(jobs, search_category=None):
     """Save a list of job dicts into the database, skipping duplicates."""
     session = Session()
     new_count = 0
@@ -63,7 +63,8 @@ def save_jobs(jobs):
             description=job.get("description"),
             date_posted=datetime.strptime(job.get("created", "")[:10], "%Y-%m-%d").date(),
             date_collected=date.today(),
-            url=job.get("redirect_url")
+            url=job.get("redirect_url"),
+            search_category=search_category
         )
         session.add(posting)
         new_count += 1
@@ -83,7 +84,7 @@ if __name__ == "__main__":
         try:
             jobs = fetch_jobs(query=query, pages=PAGES_PER_QUERY)
             print(f"Fetched {len(jobs)} jobs from API")
-            save_jobs(jobs)
+            save_jobs(jobs, search_category=query)
         except Exception as e:
             logging.error(f"Unexpected error processing '{query}': {e}")
             print(f"Something went wrong with '{query}' — skipping. See pipeline.log for details.")

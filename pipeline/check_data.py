@@ -2,6 +2,21 @@ from models import Session, JobPosting
 
 session = Session()
 jobs = session.query(JobPosting).all()
+total = session.query(JobPosting).count()
+print(f"Total jobs: {total}")
+
+sample = session.query(JobPosting).first()
+print(f"Sample search_category: {sample.search_category}")
+
+# Count jobs per category
+from sqlalchemy import func
+category_counts = (
+    session.query(JobPosting.search_category, func.count(JobPosting.id))
+    .group_by(JobPosting.search_category)
+    .all()
+)
+for category, count in category_counts:
+    print(f"{category}: {count}")
 
 print(f"Total jobs in database: {len(jobs)}")
 for job in jobs[:5]:

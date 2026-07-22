@@ -23,6 +23,7 @@ class JobPosting(Base):
     date_posted = Column(Date)
     date_collected = Column(Date)
     url = Column(String)
+    search_category = Column(String)
 
 class ExtractedSkill(Base):
     __tablename__ = "extracted_skills"
