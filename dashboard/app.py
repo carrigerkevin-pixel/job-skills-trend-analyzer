@@ -5,19 +5,35 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "pipeline"))
 
 import streamlit as st
 import pandas as pd
-from analysis import top_skills_overall
+from analysis import top_skills_overall, top_skills_by_category, all_categories
 
 st.set_page_config(page_title="Job Skills Trend Analyzer", layout="wide")
 
 st.title("📊 Job Skills Trend Analyzer")
 st.write("Discover which skills are most in-demand across tech job postings.")
 
-st.header("Top Skills Overall")
+# --- Sidebar controls ---
+st.sidebar.header("Filters")
 
-skills_data = top_skills_overall(limit=10)
+categories = all_categories()
+category_options = ["All categories"] + sorted(categories)
 
-# Convert the list of dicts into a pandas DataFrame — the format charts expect
-df = pd.DataFrame(skills_data)
-df = df.set_index("skill")  # use skill names as the x-axis labels
+selected_category = st.sidebar.selectbox("Job category", category_options)
 
-st.bar_chart(df)
+limit = st.sidebar.slider("Number of skills to show", min_value=5, max_value=20, value=10)
+
+# --- Main content ---
+if selected_category == "All categories":
+    st.header("Top Skills Overall")
+    skills_data = top_skills_overall(limit=limit)
+else:
+    st.header(f"Top Skills for: {selected_category.title()}")
+    skills_data = top_skills_by_category(selected_category, limit=limit)
+
+if skills_data:
+    df = pd.DataFrame(skills_data)
+    df = df.sort_values("count", ascending=False)
+    df = df.set_index("skill")
+    st.bar_chart(df)
+else:
+    st.write("No skill data found for this category yet.")
