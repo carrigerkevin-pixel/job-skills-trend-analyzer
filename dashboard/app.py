@@ -6,6 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "pipeline"))
 import streamlit as st
 import pandas as pd
 from analysis import top_skills_overall, top_skills_by_category, all_categories
+import altair as alt
 
 st.set_page_config(page_title="Job Skills Trend Analyzer", layout="wide")
 
@@ -33,7 +34,17 @@ else:
 if skills_data:
     df = pd.DataFrame(skills_data)
     df = df.sort_values("count", ascending=False)
-    df = df.set_index("skill")
-    st.bar_chart(df)
+
+    chart = (
+        alt.Chart(df)
+        .mark_bar()
+        .encode(
+            x=alt.X("skill", sort="-y", title="Skill"),
+            y=alt.Y("count", title="Mentions"),
+            tooltip=["skill", "count"]
+        )
+    )
+
+    st.altair_chart(chart, use_container_width=True)
 else:
     st.write("No skill data found for this category yet.")
