@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Initialize database
+        run: python pipeline/init_db.py
+
       - name: Run data collection
         env:
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
