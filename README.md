@@ -14,7 +14,7 @@ Unlike a one-off analysis, the pipeline runs **automatically every week** via Gi
 
 ## Screenshot
 
-![Dashboard screenshot](docs/screenshot.png)
+![Dashboard screenshot](docs/appscreenshot.png)
 
 ## Tech stack
 
