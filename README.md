@@ -14,7 +14,7 @@ Unlike a one-off analysis, the pipeline runs **automatically every week** via Gi
 
 ## Screenshot
 
-*(Add a screenshot of your deployed dashboard here — drag the image into the README on GitHub's web editor, or reference a file path if you save one in the repo, e.g. `docs/screenshot.png`)*
+![Dashboard screenshot](docs/screenshot.png)
 
 ## Tech stack
 
