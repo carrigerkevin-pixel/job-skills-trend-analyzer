@@ -25,24 +25,23 @@ jobs:
         run: mkdir -p data
 
       - name: Initialize database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: python pipeline/init_db.py
 
       - name: Run data collection
         env:
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: python pipeline/collect_jobs.py
 
       - name: Run skill extraction
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: python pipeline/run_extraction.py
 
       - name: Save trend snapshot
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: python pipeline/analysis.py
-
-      - name: Commit and push updated database
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f data/jobs.db
-          git commit -m "Automated data collection $(date +'%Y-%m-%d')" || echo "No changes to commit"
-          git push
