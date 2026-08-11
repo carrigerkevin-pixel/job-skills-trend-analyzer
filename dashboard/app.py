@@ -1,3 +1,10 @@
+"""Interactive dashboard for exploring job skill trend data.
+
+A Streamlit app that lets users filter skill trends by job category
+and adjust how many top skills to display, visualized as a sorted
+bar chart. Reads data via the analysis functions in analysis.py.
+"""
+
 import sys
 import os
 

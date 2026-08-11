@@ -1,3 +1,10 @@
+"""Collects job postings from the Adzuna API and saves them to the database.
+
+Loops through the search categories defined in config.py, fetches
+matching job postings, and stores new ones in the job_postings table
+while skipping duplicates already collected in a previous run.
+"""
+
 import os
 import requests
 from datetime import date, datetime
@@ -17,7 +24,17 @@ app_id = os.getenv("ADZUNA_APP_ID")
 app_key = os.getenv("ADZUNA_APP_KEY")
 
 def fetch_jobs(query="software engineer", pages=1):
-    """Fetch jobs from Adzuna for a given search query."""
+    """Fetch job postings from the Adzuna API for a given search term.
+
+    Args:
+        query (str): The job title/keyword to search for.
+        pages (int): How many pages of results to fetch (20 results
+            per page). Stops early if a page request fails.
+
+    Returns:
+        list[dict]: Raw job posting data as returned by the Adzuna API.
+    """
+
     all_jobs = []
 
     for page in range(1, pages + 1):
@@ -44,7 +61,14 @@ def fetch_jobs(query="software engineer", pages=1):
 
 
 def save_jobs(jobs, search_category=None):
-    """Save a list of job dicts into the database, skipping duplicates."""
+    """Save fetched job postings to the database, skipping duplicates.
+
+    Args:
+        jobs (list[dict]): Raw job data from fetch_jobs().
+        search_category (str, optional): Which search term produced
+            these jobs, stored for later filtering/analysis by role.
+    """
+    
     session = Session()
     new_count = 0
     skipped_count = 0

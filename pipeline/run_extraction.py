@@ -1,9 +1,23 @@
+"""Runs skill extraction across all job postings in the database.
+
+Scans each job posting's description for known skills and saves the
+results to the extracted_skills table, skipping jobs that have
+already been processed in a previous run.
+"""
+
 from datetime import date
 from models import Session, JobPosting, ExtractedSkill
 from extract_skills import extract_skills_from_text
 
 
 def run_extraction():
+    """Extract skills from every job posting that hasn't been processed yet.
+
+    Queries all job postings, skips any that already have extracted
+    skill records, runs keyword extraction on the rest, and saves
+    one ExtractedSkill row per skill found.
+    """
+    
     session = Session()
 
     jobs = session.query(JobPosting).all()

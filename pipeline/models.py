@@ -3,6 +3,13 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.orm import declarative_base, sessionmaker
 
+"""Database models and connection setup for the job skills analyzer.
+
+Defines the SQLAlchemy ORM models for storing job postings, extracted
+skills, and historical skill-count snapshots, plus the engine/session
+configuration used to connect to the PostgreSQL database.
+"""
+
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -16,6 +23,11 @@ engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
 class JobPosting(Base):
+    """A single job posting collected from the Adzuna API.
+
+    Stores the raw posting details along with which search category
+    it was collected under (e.g. "backend developer").
+    """
     __tablename__ = "job_postings"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -31,6 +43,12 @@ class JobPosting(Base):
     search_category = Column(String)
 
 class ExtractedSkill(Base):
+    """A single skill mention found in a job posting's description.
+
+    One row per (job, skill) pair — a job posting mentioning 5 skills
+    will have 5 corresponding rows here, each linked back via job_id.
+    """
+
     __tablename__ = "extracted_skills"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -40,9 +58,19 @@ class ExtractedSkill(Base):
 
 # This creates the actual database file and table if they don't exist yet
 def init_db():
+    """Create all database tables if they don't already exist.
+
+    Safe to call multiple times — existing tables are left untouched.
+    """
     Base.metadata.create_all(engine)
 
 class SkillSnapshot(Base):
+    """A historical record of a skill's mention count on a given date.
+
+    Saved periodically (e.g. weekly) to build up trend data over time,
+    both overall and broken down by job category.
+    """
+
     __tablename__ = "skill_snapshots"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

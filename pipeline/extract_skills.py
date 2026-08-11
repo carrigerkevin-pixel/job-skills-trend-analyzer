@@ -1,9 +1,27 @@
+"""Keyword-based skill extraction from job description text.
+
+Uses regex word-boundary matching against the skill variants defined
+in skills_list.py to identify which technical skills are mentioned
+in a given piece of text.
+"""
+
 import re
 from skills_list import SKILLS
 
 
 def extract_skills_from_text(text):
-    """Given a job description, return a list of skill display names found in it."""
+    """Find all known skills mentioned in a piece of text.
+
+    Args:
+        text (str): The job description text to search. Can be None
+            or empty, in which case an empty list is returned.
+
+    Returns:
+        list[str]: Display names of skills found (e.g. ["Python", "AWS"]),
+            in no particular order. Each skill appears at most once,
+            even if multiple variants match.
+    """
+    
     if not text:
         return []
 

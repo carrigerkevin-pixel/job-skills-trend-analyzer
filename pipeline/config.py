@@ -1,3 +1,10 @@
+"""Configuration settings for the job collection pipeline.
+
+Defines which job categories to search for and how many pages of
+results to pull per search, keeping these settings separate from
+the collection logic itself.
+"""
+
 # Job titles/roles we want to track for skill trend analysis
 SEARCH_QUERIES = [
     "software engineer",

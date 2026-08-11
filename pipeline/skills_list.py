@@ -1,3 +1,11 @@
+"""Keyword mappings used for skill extraction from job descriptions.
+
+Each entry maps a clean, human-readable skill name to a list of
+text variants that might appear in a job posting (different casing,
+abbreviations, or naming conventions). Used by extract_skills.py to
+scan job description text for skill mentions.
+"""
+
 # Maps a "display name" for each skill to a list of ways it might appear in text.
 # The matching will be case-insensitive, so we don't need to worry about capitalization here.
 
