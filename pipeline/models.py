@@ -24,6 +24,7 @@ class JobPosting(Base):
     company = Column(String)
     location = Column(String)
     description = Column(String)
+    full_description = Column(String)
     date_posted = Column(Date)
     date_collected = Column(Date)
     url = Column(String)
