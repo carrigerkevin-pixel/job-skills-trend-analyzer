@@ -11,13 +11,13 @@
 - Possible future improvement: scrape full descriptions from the
   `redirect_url` field for a sample of postings.
 
-## Known Limitation: Database Sync Across Environments
+## Resolved: Database Sync Across Environments
 
-- The SQLite database (`data/jobs.db`) is tracked in git and shared
-  across local development, GitHub Actions automation, and Docker
-  builds. This can cause sync conflicts (e.g. an automated CI run
-  can overwrite local data, or a stale local commit can overwrite
-  CI's data).
-- Future improvement: use a proper hosted database (e.g. PostgreSQL
-  on a cloud provider) as a single source of truth instead of a
-  local file, which would eliminate this class of issue entirely.
+Originally, this project used a local SQLite file tracked in git,
+shared across local dev, GitHub Actions, and Docker — which caused
+sync conflicts (e.g. an automated run could overwrite local data).
+
+**Fix:** migrated to a hosted PostgreSQL database (Neon). All
+environments (local, GitHub Actions, Streamlit Cloud, Docker) now
+connect to the same database via a `DATABASE_URL` environment
+variable, eliminating sync issues entirely.
